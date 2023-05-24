@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
     return DynamicColorBuilder(
       builder: (lightColorScheme, darkColorScheme) {
         return MaterialApp(
-          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             colorScheme: lightColorScheme ?? defaultLightColorScheme,
             useMaterial3: true,
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             colorScheme: darkColorScheme ?? defaultDarkColorScheme,
             useMaterial3: true,
           ),
-          themeMode: ThemeMode.dark,
+          themeMode: ThemeMode.system,
           home: const HomePage(),
         );
       },
