@@ -10,6 +10,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<ToDo> todos = [];
+
+  late TextEditingController newTodoTitleController;
+  late TextEditingController newTodoContentController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    newTodoTitleController = TextEditingController();
+    newTodoContentController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    newTodoTitleController.dispose();
+    newTodoContentController.dispose();
+
+    super.dispose();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -18,7 +37,53 @@ class _HomePageState extends State<HomePage> {
         title: const Text("To Do App"),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => SimpleDialog(
+              title: const Text("Add new Todo"),
+              contentPadding: const EdgeInsets.all(15),
+              children: [
+                TextField(
+                  controller: newTodoTitleController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Title",
+                  ),
+                ),               const SizedBox(height: 10),
+                TextField(
+                  controller: newTodoContentController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Content",
+                  ),
+                ),
+                const SizedBox(height: 15),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      todos.add(
+                        ToDo(
+                          title: newTodoTitleController.text,
+                          content: newTodoContentController.text,
+                          completed: false,
+                          from: DateTime.now(),
+                        ),
+                      );
+                    });
+
+                    newTodoTitleController.clear();
+                    newTodoContentController.clear();
+
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.done_rounded),
+                  label: const Text("Add Todo"),
+                ),
+              ],
+            ),
+          );
+        },
         label: const Text("Add Todo"),
         icon: const Icon(Icons.add_rounded),
       ),
