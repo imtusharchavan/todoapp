@@ -43,4 +43,25 @@ class DataStorage {
     // Write to the file
     todoStorage.writeAsStringSync('{"todos": $encryptedTodos}');
   }
+
+  Future<List<ToDo>> loadTodos() async {
+    // Make sure todo file is loaded
+    if (todoStorage.path == "") {
+      await _loadTodoFile();
+    }
+
+    List<ToDo> todos = [];
+
+    // Read the json data
+    final data = jsonDecode(todoStorage.readAsStringSync());
+    List encryptedTodos = data["todos"];
+
+    // Iterate over each todo and convert it to the todo class
+    for (int i = 0; i < encryptedTodos.length; i++) {
+      Map<String, dynamic> json = encryptedTodos[i];
+      todos.add(ToDo.fromJson(json, encrypter, iv));
+    }
+
+    return todos;
+  }
 }

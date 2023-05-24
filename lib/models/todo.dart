@@ -21,4 +21,15 @@ class ToDo {
       "from": encrypter.encrypt(from.millisecondsSinceEpoch.toString(), iv: iv).base64,
     };
   }
+
+  ToDo.fromJson(Map<String, dynamic> json, Encrypter encrypter, IV iv)
+      : title = encrypter.decrypt(Encrypted.fromBase64(json["title"]), iv: iv),
+        content =
+            encrypter.decrypt(Encrypted.fromBase64(json["content"]), iv: iv),
+        completed = json["completed"],
+        from = DateTime.fromMillisecondsSinceEpoch(
+          int.parse(
+            encrypter.decrypt(Encrypted.fromBase64(json["from"]), iv: iv),
+          ),
+        );
 }
