@@ -10,6 +10,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("To Do App"),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {},
+        label: const Text("Add Todo"),
+        icon: const Icon(Icons.add_rounded),
+      ),
+    );
   }
 }
