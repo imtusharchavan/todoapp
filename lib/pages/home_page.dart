@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todoapp/models/todo.dart';
 
 class HomePage extends StatefulWidget {
@@ -92,32 +93,70 @@ class _HomePageState extends State<HomePage> {
           horizontal: 16,
         ),
         child: ListView.separated(
-            itemBuilder: (context, index) => ListTile(
-                  title: Text(todos[index].title),
-                  subtitle: Text(todos[index].content),
-                  trailing: IconButton(
-                    onPressed: () {
-                      final todo = todos[index];
-                      setState(() {
-                        todos[index] = ToDo(
-                          title: todo.title,
-                          content: todo.content,
-                          completed: !todo.completed,
-                          from: todo.from,
-                        );
-                      });
-                    },
-                    icon: Icon(
-                      todos[index].completed
-                          ? Icons.check_circle_rounded
-                          : Icons.radio_button_unchecked_rounded,
+            itemBuilder: (context, index) => Slidable(key: ValueKey(todos[index]),
+              startActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                dismissible: DismissiblePane(
+                  onDismissed: () {
+                    setState(() {
+                      todos.removeAt(index);
+                    });
+                  },
+                ),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {},
+                    borderRadius: BorderRadius.circular(10),
+                    backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onErrorContainer,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  ),
+                ],
+              ),
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {},
+                    borderRadius: BorderRadius.circular(10),
+                    backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onErrorContainer,
+                    icon: Icons.date_range_rounded,
+                    label:
+                        "${_addLeadingZero(todos[index].from.hour)}:${_addLeadingZero(todos[index].from.minute)}, ${todos[index].from.day}",
+                  ),
+                ],
+              ),
+              child: ListTile(
+                    title: Text(todos[index].title),
+                    subtitle: Text(todos[index].content),
+                    trailing: IconButton(
+                      onPressed: () {
+                        final todo = todos[index];
+                        setState(() {
+                          todos[index] = ToDo(
+                            title: todo.title,
+                            content: todo.content,
+                            completed: !todo.completed,
+                            from: todo.from,
+                          );
+                        });
+                      },
+                      icon: Icon(
+                        todos[index].completed
+                            ? Icons.check_circle_rounded
+                            : Icons.radio_button_unchecked_rounded,
+                      ),
+                    ),
+                    tileColor: Theme.of(context).colorScheme.primaryContainer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  tileColor: Theme.of(context).colorScheme.primaryContainer,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+            ),
             separatorBuilder: (context, index) => const SizedBox(
             height: 10,
           ),
